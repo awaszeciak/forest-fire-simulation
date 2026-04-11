@@ -72,6 +72,7 @@ public class ConsoleRenderer {
             ++high;
         }
         changeColor("white");
+        width=0;
     }
     public void drawCell(Forest forest, int x, int y)//rysuje komórkę z lasu na pozycji [x][y]
     {
