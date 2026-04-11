@@ -3,7 +3,7 @@ import pl.forestfire.model.*;
 
 public class ConsoleRenderer {
     private int width=0;
-    private int high=0;
+    private int height=0;
     private String color="white";
     public ConsoleRenderer()//czyści terminal
     {
@@ -13,7 +13,7 @@ public class ConsoleRenderer {
     private void moveDrawer(int x, int y)//przesuwa kursor na koordynaty (x,y)
     {
         int width_difference=x-width;
-        int high_difference=y-high;
+        int height_difference=y-height;
 
         if(width_difference!=0)
         {
@@ -23,16 +23,16 @@ public class ConsoleRenderer {
                 System.out.printf("\033[%dD", -width_difference);//idzie w lewo
         }
 
-        if(high_difference!=0)
+        if(height_difference!=0)
         {
-            if(high_difference>0)
-                System.out.printf("\033[%dB", high_difference);//idzie w dół
+            if(height_difference>0)
+                System.out.printf("\033[%dB", height_difference);//idzie w dół
             else
-                System.out.printf("\033[%dA", -high_difference);//idzie w górę
+                System.out.printf("\033[%dA", -height_difference);//idzie w górę
         }
 
         width=x;
-        high=y;
+        height=y;
     }
     private void changeColor(String new_color)//zmienia kolor na podany
     {
@@ -62,14 +62,14 @@ public class ConsoleRenderer {
     public void drawForest(Forest forest)//rysuja cały las
     {
         moveDrawer(0, 0);
-        for(int y=0; y<forest.getHigh(); y++)//metody getHigh() nie ma jeszcze w lesie
+        for(int y=0; y<forest.getHeight(); y++)
         {
-            for(int x=0; x<forest.getWidth(); x++)//metody getWidth() nie ma jeszcze w lesie
+            for(int x=0; x<forest.getWidth(); x++)
             {
                 drawCell(forest, x, y);
             }
             System.out.println();
-            ++high;
+            ++height;
         }
         changeColor("white");
         width=0;
@@ -77,7 +77,7 @@ public class ConsoleRenderer {
     public void drawCell(Forest forest, int x, int y)//rysuje komórkę z lasu na pozycji [x][y]
     {
         moveDrawer(x, y);
-        changeColor(forest.getCell(x, y).getState());//porblem z widocznością State (ograniczony do pakietu model), dla testu getState() zwraca String
+        changeColor(forest.getCell(x, y).getState().get_color());//problem z widocznością State (ograniczony do pakietu model)
         System.out.print("0");
         ++width;
     }
