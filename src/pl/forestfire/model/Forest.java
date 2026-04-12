@@ -15,6 +15,11 @@ public class Forest {
         }
         this.height = height;
         this.width = width;
+
+        N = width*height;
+        S = N;
+        B = 0;
+        D = 0;
     }
 
     //zwaracenie wyskosci i szerokosci lasu
@@ -46,8 +51,22 @@ public class Forest {
         return forest[x][y];
     }
 
+    public void setCell(int x, int y, State state)
+    {
+        if (x>=width || x<0 || y>=height || y<0)
+        {
+            throw new Exception("Wrong argumengt");
+        }
+        forest[x][y].setState(state);
+    }
+
     //tablica przechowujaca las i zmienne odpoiwadajac
     private Cell[][] forest;
     private int height;
     private int width;
+
+    private int N;
+    private int S;
+    private int B;
+    private int D;
 }

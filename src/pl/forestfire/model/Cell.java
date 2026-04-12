@@ -38,6 +38,11 @@ public class Cell {
         return state;
     }
 
+    public void setState(State new_state)
+    {
+        state = new_state;
+    }
+
     private State state;
 
     private final double alfa=1;
