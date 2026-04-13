@@ -77,7 +77,7 @@ public class ConsoleRenderer {
     public void drawCell(Forest forest, int x, int y)//rysuje komórkę z lasu na pozycji [x][y]
     {
         moveDrawer(x, y);
-        changeColor(forest.getCell(x, y).getState().get_color());//problem z widocznością State (ograniczony do pakietu model)
+        changeColor(forest.getCell(x, y).getState().getColor());//problem z widocznością State (ograniczony do pakietu model)
         System.out.print("0");
         ++width;
     }

@@ -1,6 +1,6 @@
 package pl.forestfire.model;
 
-enum State
+public enum State
 {
     SUSPECTED("green"),
     BURNING("red"),
@@ -13,7 +13,7 @@ enum State
         this.color = color;
     }
 
-    String get_color()
+    public String getColor()
     {
         return color;
     }

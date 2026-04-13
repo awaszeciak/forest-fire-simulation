@@ -3,7 +3,7 @@ package pl.forestfire.model;
 import java.util.Random;
 
 public class Forest {
-    Forest(int width, int height){
+    public Forest(int width, int height){
         forest = new Cell[width][height];
 
         for (int x=0; x<width; x++)
@@ -36,9 +36,9 @@ public class Forest {
         return forest;
     }
 
-    public Cell getRandomCel()
+    public Cell getRandomCell()
     {
-        Random random;
+        Random random = new Random();
         return forest[random.nextInt(0, width)][random.nextInt(0, height)];
     }
 
@@ -46,7 +46,7 @@ public class Forest {
     {
         if (x>=width || x<0 || y>=height || y<0)
         {
-            throw new Exception("Wrong argumengt");
+            throw new IndexOutOfBoundsException("Wrong argument");
         }
         return forest[x][y];
     }
@@ -55,7 +55,7 @@ public class Forest {
     {
         if (x>=width || x<0 || y>=height || y<0)
         {
-            throw new Exception("Wrong argumengt");
+            throw new IndexOutOfBoundsException("Wrong argument");
         }
         forest[x][y].setState(state);
     }

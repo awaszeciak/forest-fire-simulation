@@ -1,5 +1,7 @@
 package pl.forestfire.model;
 
+import java.util.Random;
+
 public class Cell {
     public Cell()
     {
@@ -11,7 +13,7 @@ public class Cell {
         this.state = state;
     }
 
-    boolean start_burning()
+    public boolean startBurning()
     {
         Random random = new Random();
         if (state == State.SUSPECTED && random.nextDouble()<alfa)
@@ -22,7 +24,7 @@ public class Cell {
         return false;
     }
 
-    boolean burn()
+    public boolean burn()
     {
         Random random = new Random();
         if (state == State.BURNING && random.nextDouble()<beta)
