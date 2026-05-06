@@ -1,4 +1,4 @@
-Forest Fire Simulation 
+## Forest Fire Simulation 
 Project Description
 
 This project is a console-based simulation of forest fire spread written in Java.
