@@ -3,20 +3,24 @@ package pl.forestfire.model;
 import java.util.Random;
 
 public class Cell {
-    public Cell()
+    public Cell(double alfa, double beta)
     {
-        state = State.SUSPECTED;
+        this.state = State.SUSPECTED;
+        this.alfa = alfa;
+        this.beta = beta;
     }
 
-    Cell(State state)
+    public Cell(State state, double alfa, double beta)
     {
         this.state = state;
+        this.alfa = alfa;
+        this.beta = beta;
     }
 
-    public boolean startBurning()
+    public boolean startBurning(double probability)
     {
         Random random = new Random();
-        if (state == State.SUSPECTED && random.nextDouble()<alfa)
+        if (state == State.SUSPECTED && random.nextDouble() < probability)
         {
             state = State.BURNING;
             return true;
@@ -27,7 +31,7 @@ public class Cell {
     public boolean burn()
     {
         Random random = new Random();
-        if (state == State.BURNING && random.nextDouble()<beta)
+        if (state == State.BURNING && random.nextDouble() < beta)
         {
             state = State.DEAD;
             return true;
@@ -47,6 +51,14 @@ public class Cell {
 
     private State state;
 
-    private final double alfa=1;
-    private final double beta=0.1;
+    private final double alfa;
+    private final double beta;
+
+    public double getAlfa() {
+        return alfa;
+    }
+
+    public double getBeta() {
+        return beta;
+    }
 }
