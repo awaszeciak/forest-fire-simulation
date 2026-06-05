@@ -5,7 +5,7 @@ import pl.forestfire.model.*;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
+//klasa odpowiadajaca za zapis do pliku csv
 public class ForestWriter
 {
     public static void WriteToCsv(String file_name, Forest forest)

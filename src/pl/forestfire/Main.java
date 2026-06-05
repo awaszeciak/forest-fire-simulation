@@ -1,38 +1,41 @@
 package pl.forestfire;
 
-import pl.forestfire.model.Forest;
-import pl.forestfire.model.State;
-import pl.forestfire.simulation.Simulation;
-import pl.forestfire.simulation.SimulationConfig;
-import pl.forestfire.view.ConsoleRenderer;
-import pl.forestfire.view.StepsFilePrinter;
-import pl.forestfire.forestwriter.ForestWriter;
+import pl.forestfire.application.*;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        SimulationConfig config = new SimulationConfig("config.properties");
 
-        Forest forest = new Forest(config.width, config.height, config.alfa, config.beta);
-        Simulation simulation = new Simulation(forest, config);
-        ConsoleRenderer view = ConsoleRenderer.getConsoleRenderer();
+        System.out.print("\033[H\033[2J");
+        System.out.println("Wybierz tryb działania:");
+        System.out.println("1 - terminal (upewnij się, że terminal jest wystarczająco duży!)");
+        System.out.println("2 - GUI");
+        System.out.println("3 - symulacja do plików");
+        System.out.println();
 
+        String decision;
+        Scanner scanner=new Scanner(System.in);
+        do{
+            System.out.print("\033[A\r\033[K");
+            decision = scanner.next();
+            switch (decision) {
+                case "1":
+                    TerminalApplication.startApp();
+                    break;
+                case "2":
+                    JavaFxApplication.startApp(args);
+                    break;
+                case "3":
+                    ToFileApp.startApp();
+                    break;
+                default:
+                    System.out.print("Złe dane");
+                    decision="-1";
+                    break;
+            }
 
-        forest.getRandomCell().setState(State.BURNING);
-        forest.updateCounter(State.SUSPECTED, State.BURNING);
-
-        while (forest.getBurningCounter() > 0) {
-            simulation.step();
-            view.drawForest(forest);
-            view.showStatistics(forest, simulation.getWindSpeed(), simulation.getWindAngle());
-            StepsFilePrinter.saveStep(forest);
-
-            Thread.sleep(config.delay);
-        }
-        StepsFilePrinter.close();
-        ForestWriter.WriteToCsv("file.csv", forest);
-
-        forest = new Forest("file.csv", config.alfa, config.beta);
-        ForestWriter.WriteToCsv("file2.csv", forest);
+        } while(decision=="-1");
 
     }
 }

@@ -7,6 +7,14 @@ import java.io.IOException;
 
 public class Forest {
     public Forest(int width, int height, double alfa, double beta){
+        if (alfa>1 || alfa<0)
+        {
+            throw new IllegalArgumentException("Alfa value must be between 0 and 1");
+        }
+        if (beta > 1 || beta <0)
+        {
+            throw new IllegalArgumentException("Beta value must be between 0 and 1");
+        }
         if (width<=0 || height<=0)
         {
             throw new IndexOutOfBoundsException("arguments must be bigger than 0");
@@ -74,7 +82,7 @@ public class Forest {
 
     }
 
-
+    //update conuer'ów poszczególnych typów drzew - jeśli oldState to null, to nie zmniejsza licznika (do konstruktorów)
     public void updateCounter(State oldState, State newState)
     {
         switch(newState)
@@ -107,7 +115,7 @@ public class Forest {
         }
     }
 
-
+    //zwaracenie wyskosci i szerokosci lasu
     public int getWidth() {
         return width;
     }
@@ -163,7 +171,7 @@ public class Forest {
     }
 
 
-
+    //tablica przechowujaca las i zmienne odpoiwadajac
     private Cell[][] forest;
     private int height;
     private int width;

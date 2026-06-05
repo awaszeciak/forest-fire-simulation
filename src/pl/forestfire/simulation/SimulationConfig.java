@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-
+// klasa odpowiadajaca za odczyt danych z pliku
 public class SimulationConfig {
     public final int width;
     public final int height;
