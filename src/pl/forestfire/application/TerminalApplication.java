@@ -8,7 +8,35 @@ import pl.forestfire.simulation.SimulationConfig;
 import pl.forestfire.application.view.ConsoleRenderer;
 import pl.forestfire.application.view.StepsFilePrinter;
 
+/**
+ * Klasa odpowiadającą za uruchomienie symulacji w terminalu, z wyświetlaniem kolejnych
+ * kroków w terminalu wraz z podstawowymi informacjami.
+ *
+ * <p>
+ *     Wczytuje konfigurację, tworzy las oraz obiekt symulacji, a następnie wyświetla kolejne kroki
+ *     działania programu bezpośrednio w konsoli. Dodatkowo pokazuje podstawowe statystyki,
+ *     takie jak liczba komórek w poszczególnych stanach oraz informacje o wietrze.
+ * </p>
+ */
 public class TerminalApplication {
+    /**
+     * Uruchamianie symulacji pożaru lasu w terminalu.
+     *
+     * <p>
+     *     Metoda losowo wybiera początkową komórkę, ustawia ją jako płonącą,
+     *     rysuje początkowy stan lasu, a następnie wykonuje kolejne kroki symulacji
+     *     aż do momentu, gdy w lesie nie pozostanie żadna komórka.
+     * </p>
+     *
+     * <p>
+     *     W każdym kroku aktualny stan lasu jest zapisywany do pliku,
+     *     zmienione komórki są odświeżane w terminalu, a następnie wyświetlane
+     *     są statystyki aplikacji.
+     * </p>
+     *
+     * @throws InterruptedException jeżeli działanie programu zostanie przerwane podczas
+     * oczekiwania między kolejnymi krokami
+     */
     public static void startApp() throws InterruptedException {
         SimulationConfig config;
         try {

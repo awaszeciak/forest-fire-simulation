@@ -5,9 +5,30 @@ import pl.forestfire.model.*;
 import java.io.FileWriter;
 import java.io.IOException;
 
-//klasa odpowiadajaca za zapis do pliku csv
+/**
+ * Klasa odpowiadająca za zapis przekazanego lasu do pliku CSV.
+ *
+ * <p>
+ *     Zapisuje komórki lasu w postaci znaków odpowiadających ich stanom.
+ *     Kolejne komórki w wierszu oddzielone są przecinkami, a każdy wiersz lasu
+ *     zapisywany jest w osobnej linii pliku.
+ * </p>
+ */
 public class ForestWriter
 {
+    /**
+     *
+     * Statyczna metoda odpowiadająca za zapis lasu do pliku.
+     *
+     * <p>
+     *     Dla każdej komórki pobierany jest znak odpowiadający jej aktualnemu stanowi,
+     *     na przykład {@code s}, {@code b} lub {@code d}. Dzięki temu
+     *     zapisany plik może później reprezentować końcowy stan symulacji.
+     * </p>
+     *
+     * @param file_name nazwa pliku, do którego ma zostać zapisany las
+     * @param forest las, którego stan ma zostać zapisany do pliku
+     */
     public static void WriteToCsv(String file_name, Forest forest)
     {
         try (FileWriter file = new FileWriter(file_name))

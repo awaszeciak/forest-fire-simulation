@@ -2,6 +2,7 @@ package pl.forestfire.application.view;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,18 +16,68 @@ import pl.forestfire.simulation.Simulation;
 
 import java.util.Stack;
 
-public class JavaFxRenderer implements Renderer{
-    private GridPane forestGrid;
-    private Rectangle[][] forestContainer;
 
-    private Button start;
-    private Button exit;
-    private Button faster;
-    private Button slower;
+/**
+ * Abstrakcyjna klasa odpowiedzialna za definiowanie graficznego wyświetlania symulacji pożaru lasu
+ * z wykorzystaniem JavaFX.
+ *
+ * <p>
+ *     Renderer tworzy okno aplikacji, planszę lasu, panel statystyk,
+ *     legendę oraz przyciski sterujące symulacją. Odpowiada także za
+ *     odświeżanie pojedynczych komórek oraz aktualizację statystyk
+ *     widocznych w interfejsie graficznym.
+ * </p>
+ */
+public abstract class JavaFxRenderer implements Renderer{
 
-    private Label statistics;
+    /**
+     * maksymalna szerokość lasu w pikselach
+     */
+    final double maxGridWidth = 700;
+
+    /**
+     * maksymalna wysokość lasu w pikselach
+     */
+    final double maxGridHeight = 430;
+
+    /**
+     * Przycisk uruchamiający symulację.
+     */
+    protected Button start;
+
+    /**
+     * Przycisk zamykający aplikację.
+     */
+    protected Button exit;
+
+    /**
+     * Przycisk zwiększający szybkość symulacji.
+     */
+    protected Button faster;
+
+    /**
+     * Przycisk zmniejszający szybkość symulacji.
+     */
+    protected Button slower;
+
+    /**
+     * Etykieta wyświetlająca aktualne statystyki symulacji.
+     */
+    protected Label statistics;
 
 
+    /**
+     * Tworzy graficzny widok symulacji.
+     *
+     * <p>
+     *     Konstruktor przygotowuje przyciski, planszę lasu, panel statystyk,
+     *     legendę oraz główną scenę aplikacji JavaFX.
+     * </p>
+     * @param stage główne okno aplikacji JavaFX
+     * @param forest las, który ma zostać wyświetlony
+     * @param simulation obiekt symulacji, z którego pobierane są informacje o wietrze
+     * @param delay opóźnienie między kolejnymi krokami symulacji
+     */
     public JavaFxRenderer(Stage stage, Forest forest, Simulation simulation, long delay){
         start=new Button("▶ Start");
         exit=new Button("■ Wyjście");
@@ -46,7 +97,7 @@ public class JavaFxRenderer implements Renderer{
         header.setPadding(new Insets(25, 35, 25, 35));
         header.setStyle("-fx-background-color: white;" + "-fx-border-color: transparent transparent #e5e7eb transparent;");
 
-        StackPane forestCard = new StackPane(forestGrid);
+        StackPane forestCard = new StackPane(getNode());
         forestCard.setPadding(new Insets(15));
         forestCard.setStyle(
                 "-fx-background-color: white;" +
@@ -60,6 +111,7 @@ public class JavaFxRenderer implements Renderer{
         HBox content = new HBox(25, forestCard, statsCard);
         content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(25));
+        HBox.setHgrow(forestCard, Priority.ALWAYS);
 
         styleButtons();
 
@@ -87,9 +139,27 @@ public class JavaFxRenderer implements Renderer{
         stage.show();
 
 
+
     }
 
-    private VBox createStatisticsCard() {
+    /**
+     * Zwraca iterpretację wyświetlanego lasu przez daną klasę potomną
+     *
+     * @return zwraca Node do stworzonej graficznej interpretacji lasu
+     */
+    protected abstract Node getNode();
+
+    /**
+     * Tworzy panel statystyk widoczny po prawej stronie okna.
+     *
+     * <p>
+     *     Panel zawiera tytuł, aktualne statystyki symulacji oraz legendę
+     *     kolorów używanych do oznaczania stanów komórek.
+     * </p>
+     *
+     * @return gotowy panel statystyk
+     */
+    protected VBox createStatisticsCard() {
         Label statsTitle = new Label("Statystyki");
         statsTitle.setStyle("-fx-font-size: 22px;" + "-fx-font-weight: bold;" + "-fx-text-fill: #111827;");
 
@@ -117,7 +187,18 @@ public class JavaFxRenderer implements Renderer{
         return statsCard;
     }
 
-    private HBox createLegendRow(String color, String text) {
+    /**
+     * Tworzy pojedynczy wiersz legendy.
+     *
+     * <p>
+     *     Wiersz składa się z kolorowego kwadratu oraz opisu znaczenia danego koloru.
+     * </p>
+     * @param color kolor kwadratu w legendzie
+     * @param text opis znaczenia koloru
+     * @return wiersz legendy
+     */
+
+    protected HBox createLegendRow(String color, String text) {
         Rectangle square = new Rectangle(14,14);
         square.setFill(Paint.valueOf(color));
         square.setArcHeight(3);
@@ -132,14 +213,24 @@ public class JavaFxRenderer implements Renderer{
         return row;
     }
 
-    private void styleButtons() {
+    /**
+     * Ustawia style wszystkich przycisków widocznych w interfejsie.
+     */
+    protected void styleButtons() {
         styleButton(start, "#22c55e", "#01152b", "#16a34a" );
         styleButton(slower, "#dbeafe", "#01152b", "#93c5fd" );
         styleButton(faster, "#fb923c", "#01152b", "#ea580c" );
         styleButton(exit, "#ef4444", "#01152b", "#dc2626" );
     }
 
-    private void styleButton(Button button, String backgroundColor, String textColour, String borderColor) {
+    /**
+     * Ustawia styl pojedynczego przycisku.
+     * @param button przycisk, którego styl ma zostać ustawiony
+     * @param backgroundColor kolor tła przycisku
+     * @param textColour kolor tekstu przycisku
+     * @param borderColor kolor obramowania przycisku
+     */
+    protected void styleButton(Button button, String backgroundColor, String textColour, String borderColor) {
         button.setPrefWidth(160);
         button.setPrefHeight(45);
 
@@ -155,40 +246,46 @@ public class JavaFxRenderer implements Renderer{
         );
     }
 
+
+    /**
+     * Rysuje cały las w interfejsie graficznym.
+     *
+     * <p>
+     *     Metoda mająca tworzyć obiekt garficznej interpretacji lasu oraz wyświetlla go na ekranie
+     * </p>
+     * @param forest las, który ma zostać narysowany
+     */
     @Override
-    public void drawForest(Forest forest) {
-        forestGrid = new GridPane();
-        forestGrid.setHgap(0);
-        forestGrid.setVgap(0);
-        forestGrid.setAlignment(Pos.CENTER);
+    public abstract void drawForest(Forest forest);
 
-        double maxGridWidth = 700;
-        double maxGridHeight = 430;
-
-        double cellWidth = maxGridWidth / forest.getWidth();
-        double cellHeight = maxGridHeight / forest.getHeight();
-
-        double cellSize = Math.min(cellWidth, cellHeight);
-
-        forestContainer=new Rectangle[forest.getWidth()][forest.getHeight()];
-
-
-        for (int x = 0; x < forest.getWidth(); x++)
-            for (int y = 0; y < forest.getHeight(); y++) {
-                forestContainer[x][y]=new Rectangle(cellSize + 0.3, cellSize + 0.3, Paint.valueOf(forest.getForest()[x][y].getState().getColor()));
-
-//                forestContainer[x][y].setArcHeight(0);
-//                forestContainer[x][y].setArcHeight(0);
-
-                forestGrid.add(forestContainer[x][y], x, y);
-            }
-    }
-
+    /**
+     * Odświeża pojedynczą komórkę lasu w interfejsie graficznym.
+     * <p>
+     *     Kolor prostokąta zostaje ustawiony zgodnie z aktualnym stanem
+     *     odpowiadającej mu komórki.
+     * </p>
+     *
+     * @param forest las z którego pochodzi komórka.
+     * @param x położenie komórki na osi X.
+     * @param y położenie komórki na osi Y.
+     */
     @Override
-    public void drawCell(Forest forest, int x, int y) {
-        forestContainer[x][y].setFill(Paint.valueOf(forest.getForest()[x][y].getState().getColor()));
-    }
+    public abstract void drawCell(Forest forest, int x, int y);
 
+
+    /**
+     * Aktualizuje tekst statystyk widocznych w interfejsie graficznym.
+     *
+     * <p>
+     *     Wyświetlana jest liczba zdrowych, płonących i spalonych drzew,
+     *     a także prędkość wiatru, kierunek wiatru, kąt wiatru oraz aktualnie
+     *     opóźnienie symulacji.
+     * </p>
+     * @param forest las, którego statystyki mają zostać wyświetlone
+     * @param speed prędkość wiatru
+     * @param angle kąt kierunku wiatru względem wschodu
+     * @param delay opóżnienie między krokami symulacji
+     */
     @Override
     public void showStatistics(Forest forest, double speed, double angle, long delay) {
         statistics.setText("Zwykłe drzewa: "+forest.getSuspectedCounter()+"\n"+
@@ -201,18 +298,34 @@ public class JavaFxRenderer implements Renderer{
         );
     }
 
+    /**
+     * Zwraca przycisk uruchamiania symulacji.
+     * @return przycisk Start
+     */
     public Button getStart(){
         return start;
     }
 
+    /**
+     * Zwraca przycisk zamykania aplikacji.
+     * @return przycisk Exit
+     */
     public Button getExit() {
         return exit;
     }
 
+    /**
+     * Zwraca przycisk zwiększania szybkości symulacji.
+     * @return przycisk Faster
+     */
     public Button getFaster() {
         return faster;
     }
 
+    /**
+     * Zwraca przycisk zmniejszania szybkości symulacji.
+     * @return przycisk Slower
+     */
     public Button getSlower() {
         return slower;
     }

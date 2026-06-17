@@ -1,10 +1,24 @@
-## Forest Fire Simulation 
-Project Description
+# Forest Fire Simulation
+Projekt symulujący rozprzestrzenianie się pożaru lasu w czasie, za pomocą modelu SIR.
 
-This project is a console-based simulation of forest fire spread written in Java.
-It models how fire propagates across a 2D grid using probabilistic rules.
+## Opis
+Symulacja przedstawia las jako siatkę komórek, które mogą znajdować się w jednym z trzech stanów:
+- **SUSPECTED** - drzewo zdrowe (niepłonące)
+- **BURNING** - drzewo płonące
+- **DEAD** - drzewo spalone
+  
+W każdym kroku symulacji:
+- płonące drzewa mogą się wypalić,
+- ogień może przenieść się na sąsiednie drzewa,
+- wpływ na rozprzestrzenianie ma kierunek i siła wiatru.
 
-Project status: In progress
-The project is currently under active development and is being extended with additional simulation features and improvements.
+## Model wiatru
+Wiatr modelowany jest jako:
+- kąt (0-359 stopni) - kierunek wiatru,
+- prędkość (m/s) - siła wiatru.
+  
+Wpływ wiatru obliczany jest na podstawie zgodności kierunku wiatru z kierunkiem rozprzestrzeniania się ognia.
 
-The goal of the project is to demonstrate object-oriented programming, simulation logic and modular code structure.
+## Konfiguracja
+Parametry symulacji wczytywane są z pliku: config.properties.
+

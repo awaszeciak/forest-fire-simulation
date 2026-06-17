@@ -4,9 +4,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import pl.forestfire.model.Forest;
 
+/**
+ * Klasa odpowiadająca za zapis ilości drzew różnych stanów do pliku steps.csv.
+ */
 public class StepsFilePrinter {
 
+    /**
+     * Licznik ilości kroków.
+     */
     static private int step=0;
+
+    /**
+     * Plik, do którego zapisywane będą kroki symulacji.
+     */
     static private FileWriter file;
 
     static {
@@ -20,6 +30,10 @@ public class StepsFilePrinter {
         }
     }
 
+    /**
+     * Zapisuje statystyki lasu do pliku.
+     * @param forest las, którego ilość drzew różnych stanów ma zostać zapisana.
+     */
     public static void saveStep(Forest forest) {
         try {
             file.write(step+","+forest.getSuspectedCounter()+","+forest.getBurningCounter()+","+forest.getDeadCounter()+"\n");
@@ -30,6 +44,9 @@ public class StepsFilePrinter {
         }
     }
 
+    /**
+     * Zamyka plik steps.csv.
+     */
     public static void close() {
         try {
             file.close();

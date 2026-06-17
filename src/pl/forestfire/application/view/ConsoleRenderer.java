@@ -1,9 +1,20 @@
 package pl.forestfire.application.view;
 import pl.forestfire.model.*;
 
+/**
+ * Klasa zarządzająca wyświetlaniem symulacji w termianlu oraz zarządzaniem pozycją, kolorem i widocznością kursora.
+ *
+ * <p>
+ *     Renderer zarządza rysowaniem lasu, pojedynczych komórek oraz statystyk symulacji.
+ *     Dodatkowo obsługuje pozycję kursora, kolor tekstu oraz ukrywanie
+ *     i przywracanie widoczności kursora w terminalu.
+ * </p>
+ */
 public class ConsoleRenderer implements Renderer{
 
-    //czyści terminal i ukrywa kursor
+    /**
+     * Prywatny konstruktor, który czyści ekran oraz ukrywa kursor w termialu.
+     */
     private ConsoleRenderer() {
         Runtime.getRuntime().addShutdownHook(new Thread(this::clean));//zapewnia, że przy zamknięciu programu wykona się clean()
         System.out.print("\033[H\033[2J");//czyszczenie terminala
@@ -11,20 +22,31 @@ public class ConsoleRenderer implements Renderer{
         System.out.flush();
     }
 
+    /**
+     * Zwraca instancję klasy (Singleton).
+     *
+     * @return jedyna instancja klasy {@link ConsoleRenderer}
+     */
     public static ConsoleRenderer getConsoleRenderer() {
         if(consolerenderer==null)
             consolerenderer=new ConsoleRenderer();
         return consolerenderer;
     }
 
-    //przechodzi do nowej linii
+    /**
+     * Przenosi kursor do nowej linii.
+     */
     public void newLine() {
         System.out.println();
         ++height;
         width=0;
     }
 
-    //przesuwa kursor na koordynaty (x,y)
+    /**
+     * Przesuwa kursor na koordynaty (x,y).
+     * @param x pozycja na osi X, na którą należy przenieść kursor.
+     * @param y pozycja na osi Y, na którą należy przenieść kursor.
+     */
     private void moveDrawer(int x, int y) {
         int width_difference=x-width;
         int height_difference=y-height;
@@ -42,13 +64,15 @@ public class ConsoleRenderer implements Renderer{
             else
                 System.out.printf("\033[%dA", -height_difference);//idzie w górę
         }
-        // System.out.printf("\033[%d;%dH", y,x); //działa, ale powoduje migotanie ekranu, za to eliminując potrzebę zmiennych width i height
 
         width=x;
         height=y;
     }
 
-    //zmienia kolor na podany
+    /**
+     * Zmienia kolor tekstu używanego do rysowania w terminalu.
+     * @param new_color nazwa koloru, na jaki zmienić kursor (obsługuje green, red, black, white).
+     */
     private void changeColor(String new_color) {
         if(!color.equals(new_color)) {
             color=new_color;
@@ -72,7 +96,12 @@ public class ConsoleRenderer implements Renderer{
         }
     }
 
-    //rysuje cały las
+
+    /**
+     * Rysuje cały las w lewym górnym rogu terminala.
+     *
+     * @param forest las, który ma zostać narysowany
+     */
     @Override
     public void drawForest(Forest forest) {
         moveDrawer(0, 0);
@@ -85,7 +114,13 @@ public class ConsoleRenderer implements Renderer{
         changeColor("white");
     }
 
-    //rysuje komórkę z lasu na pozycji [x][y]
+    /**
+     * Wypisuje w terminalu daną komórkę.
+     * @param forest las z którego pochodzi komórka.
+     * @param x położenie komórki na osi X.
+     * @param y położenie komórki na osi Y.
+     *
+     */
     @Override
     public void drawCell(Forest forest, int x, int y) {
         moveDrawer(x, y);
@@ -94,7 +129,9 @@ public class ConsoleRenderer implements Renderer{
         ++width;
     }
 
-    //przywraca kursor przy zakończeniu programu lub zamknięciu ctrl+c
+    /**
+     * Przywraca widoczność kursora oraz kolor pisanego tekstu w terminalu przy zakończeniu programu.
+     */
     public void clean() {
         System.out.flush();
         System.out.print("\033[u");//przywraca zapisaną pozycję kursora
@@ -103,7 +140,14 @@ public class ConsoleRenderer implements Renderer{
         System.out.flush();
     }
 
-    //wyświetla ilość płonących, niepłonących oraz spalonych drzew pod lasem i inne statystyki
+    /**
+     * Metoda odpowiadająca za wyświetlenie pod lasem statystyk symulacji.
+     * @param forest las, którego statystyki mają zostać wyświetlone.
+     * @param speed prędkość wiatru.
+     * @param angle kąt kierunku wiatru względem wschodu
+     * @param delay opóżnienie między krokami symulacji.
+     *
+     */
     @Override
     public void showStatistics(Forest forest, double speed, double angle, long delay) {
         moveDrawer(0, forest.getHeight());
@@ -125,8 +169,23 @@ public class ConsoleRenderer implements Renderer{
         System.out.print("\033[s");//zapisuje pozycję kursora
     }
 
+    /**
+     * Obecna pozycja na osi X.
+     */
     private int width=0;
+
+    /**
+     * Obecna pozycja na osi Y.
+     */
     private int height=0;
+
+    /**
+     * Obecny kolor kursora.
+     */
     private String color="white";
+
+    /**
+     * Instancja klasy (Singleton).
+     */
     private static ConsoleRenderer consolerenderer;
 }
